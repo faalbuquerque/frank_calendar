@@ -9,6 +9,8 @@
 &#10003; Webrick
 &#10003; Postgres
 &#10003; Rspec
+&#10003; Rubocop
+&#10003; Simplecov
 </p>
 
 <br>
@@ -37,7 +39,13 @@ cd frank_calendar
 
 Execute o comando para criar o container com Docker:
 ```
-docker build --tag frank_calendar .
+docker-compose build
+
+```
+
+Faça uma copia das variáveis de ambiente:
+```
+cp .env{.sample,}
 
 ```
 
@@ -48,7 +56,7 @@ docker-compose up -d
 
 Execute o comando para criar banco e seeds:
 ```
-ruby bin/setup.rb
+bin/setup
 
 ```
 
@@ -57,6 +65,26 @@ Para acessar a aplicação, abra no navegador:
 http://127.0.0.1:4567/
 ```
 <br>
+
+*Caso queira efetuar testes com RSPEC e verificar cobertura, execute os comandos abaixo:*
+```
+- Para entrar no bash do container web:
+docker-compose exec web bash
+
+- Digite o comando:
+rspec
+
+```
+
+*Caso queira verificar a formatacao e sintaxe do codigo com Rubocop, execute os comandos abaixo:*
+```
+- Para entrar no bash do container web:
+docker-compose exec web bash
+
+- Digite o comando:
+rubocop
+
+```
 
 *Caso queira visualizar as informações de banco/seeds, execute os comandos abaixo:*
 ```

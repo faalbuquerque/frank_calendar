@@ -1,4 +1,4 @@
-require_relative '../config/database.rb'
+require_relative '../config/data_base'
 
 class BaseQueries
   def self.connect_to_db
@@ -6,6 +6,6 @@ class BaseQueries
   end
 
   def self.close_connection
-    @connection.close if @connection
+    @connection&.close
   end
 end
