@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+puts '====== Gerando Bancos de Dados ======'
+system 'docker-compose exec db createdb frankcalendar_development -U postgres'
+system 'docker-compose exec db createdb frankcalendar_test -U postgres'
+
+puts '====== Criando Tabelas ======'
+system 'docker-compose exec web ruby db/migrate/create_table_users.rb'
+system "docker-compose exec web bash -c 'DATABASE=test
+                                        ruby db/migrate/create_table_users.rb'"
+
+puts '====== Gerando Seeds ======'
+system 'docker-compose exec web ruby db/seeds.rb'
+
+puts '====== Finalizado! ======'
