@@ -1,4 +1,4 @@
-<h1> Frank Calendar</h1>
+<h1 style="color:#2C3E50"> Frank Calendar</h1>
 
 <h3 align="justify">Software de calendário para gerenciar eventos, desenvolvido em Sinatra.</h3>
 
@@ -110,3 +110,68 @@ psql -U postgres
 <br>
 
 <p >⌛ Em desenvolvimento...</p>
+<br>
+
+<h3 style="color:#2C3E50"> Endpoint para visualizar todos os usuários:</h3>
+
+```
+Rota: GET http://127.0.0.1:4567/users
+
+Output:
+
+[
+  {
+    "id": "1",
+    "name": "Maria",
+    "email": "maria@frankcalendar.com",
+    "created_at": "2021-10-25",
+    "updated_at": "2021-10-25"
+  },
+  {
+    "id": "2",
+    "name": "Joao",
+    "email": "joao@frankcalendar.com",
+    "created_at": "2021-10-25",
+    "updated_at": "2021-10-25"
+  },
+  {
+    "id": "3",
+    "name": "Ana",
+    "email": "ana@frankcalendar.com",
+    "created_at": "2021-10-25",
+    "updated_at": "2021-10-25"
+  }
+]
+
+Output caso nao existam usuários criados:
+
+{
+  "message": "Nenhum usuário criado!"
+}
+```
+
+<h3 style="color:#2C3E50"> Endpoint para adicionar usuário: </h3>
+
+```
+Rota:  POST http://127.0.0.1:4567/users
+
+Input:
+
+{
+  "name": "ana",
+  "email": "ana@frankcalendar.com"
+}
+
+Output em caso de sucesso:
+
+{
+  "name": "ana",
+  "email": "ana@frankcalendar.com"
+}
+
+Output em caso de falha(campos em branco):
+
+[
+  "name: não pode ficar em branco!",
+  "email: não pode ficar em branco!"
+]

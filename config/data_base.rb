@@ -1,4 +1,3 @@
-require 'byebug'
 require 'pg'
 require 'yaml'
 require 'erb'
@@ -17,5 +16,12 @@ class DataBase
 
     db = YAML.safe_load(data, dictionary, [], true)
     db[ENV['DATABASE']] || db['development']
+  end
+
+  def self.clean_db
+    sql = 'TRUNCATE TABLE users' if ENV['DATABASE'] == 'test'
+
+    connection.exec(sql)
+    connection&.close
   end
 end

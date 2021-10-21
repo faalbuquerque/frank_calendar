@@ -1,6 +1,10 @@
 require_relative 'base_queries'
 
 class UsersQueries < BaseQueries
+  def self.date
+    DateTime.now.to_s
+  end
+
   def self.fetch_all
     connect_to_db
 
@@ -16,17 +20,20 @@ class UsersQueries < BaseQueries
     close_connection
   end
 
-  def self.create(hash)
-    sql = "INSERT INTO users(#{hash.keys.join(', ')}, created_at, updated_at)
+  def self.user_sql(hash)
+    "INSERT INTO users(#{hash.keys.join(', ')}, created_at, updated_at)
     VALUES(#{hash.values.map { |value| "'#{value}'" }.join(', ')},
-    '#{DateTime.now.to_datetime}', '#{DateTime.now.to_datetime}');"
+    '#{date}', '#{date}');"
+  end
 
-    connect_to_db
-
-    @connection.exec(sql)
-  rescue PG::Error => e
-    raise "#{e.message} maybe no database?"
-  ensure
-    close_connection
+  def self.create(hash)
+    begin
+      connect_to_db and @connection.exec(user_sql(hash))
+    rescue PG::Error => e
+      raise "#{e.message} maybe no database?"
+    ensure
+      close_connection
+    end
+    User.user_new(hash.merge({ created_at: date, updated_at: date }))
   end
 end
