@@ -18,5 +18,8 @@ Metrics/BlockLength:
 Style/Documentation:
   Enabled: false
 
+Style/ClassVars:
+  Enabled: false
+
 Style/ClassAndModuleChildren:
   EnforcedStyle: 'compact'

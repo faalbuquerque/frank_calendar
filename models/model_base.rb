@@ -9,4 +9,14 @@ class ModelBase
     @attributes = hash
     @errors = []
   end
+
+  # setter
+  def self.validate(*validations)
+    @@validate = validations
+  end
+
+  # getter
+  def validate
+    @@validate
+  end
 end
