@@ -1,17 +1,17 @@
-require 'byebug'
-
 module Validate
   def valid?
-    return true if !blank_fields? && valid_email? && !missing_attributes?
+    return true if catch_validations
 
-    set_missing_errors if missing_attributes?
-    set_email_errors if attributes['email'] && !valid_email?
-    set_blank_errors
-
-    false
+    set_errors_validations and false
   end
 
   private
+
+  def set_errors_validations
+    set_missing_errors if missing_attributes? && validate.include?(:not_missing)
+    set_email_errors if attributes['email'] && not_valid_email? && validate.include?(:valid_email)
+    set_blank_errors if validate.include?(:not_blank)
+  end
 
   def set_missing_errors
     missing_attributes.each do |key|
@@ -30,22 +30,24 @@ module Validate
     end
   end
 
-  def blank_fields?
-    return false unless validate.include? :blank
-
-    attributes.values.map(&:strip).include?('')
+  def not_blank?
+    !attributes.values.map(&:strip).include?('')
   end
 
   def valid_email?
-    return true unless validate.include? :email
-
     !!(attributes['email'] =~ URI::MailTo::EMAIL_REGEXP)
   end
 
-  def missing_attributes?
-    return false unless validate.include? :missing
+  def not_valid_email?
+    !valid_email?
+  end
 
-    attributes.keys != known_attributes
+  def not_missing?
+    attributes.keys.eql? known_attributes
+  end
+
+  def missing_attributes?
+    !not_missing?
   end
 
   def missing_attributes
@@ -56,5 +58,9 @@ module Validate
     regex = /(?:^|(?=[^']).\b)(created_at|updated_at|id|errors|attributes)\b/
     @known_attributes ||= to_yaml.split.join(' ').gsub(regex, '')
                                  .delete(':').split('[]').pop.strip.split
+  end
+
+  def catch_validations
+    validate.all? { |symbol| send("#{symbol}?".to_sym) }
   end
 end

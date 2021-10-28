@@ -175,3 +175,16 @@ Output em caso de falha(campos em branco):
   "name: não pode ficar em branco!",
   "email: não pode ficar em branco!"
 ]
+
+Output em caso de falha(faltando campos):
+
+[
+  "name: campo faltando!",
+  "email: campo faltando!"
+]
+
+Output em caso de falha(email inválido):
+
+[
+  "Email inválido!"
+]
