@@ -5,6 +5,8 @@ require_relative './model_base'
 class User < ModelBase
   attr_accessor :id, :name, :email, :created_at, :updated_at
 
+  validate :not_blank, :valid_email, :not_missing
+
   def initialize(hash)
     super
     @id = hash[:id]
@@ -23,13 +25,8 @@ class User < ModelBase
   end
 
   def user_save
-    return false unless valid?
+    errors << 'Não foi possível salvar!' and return false unless valid?
 
     UsersQueries.create(attributes)
-  end
-
-  def self.create(params)
-    user = user_new(params)
-    user.user_save
   end
 end

@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'byebug'
+
 RSpec.describe 'User' do
   context 'GET' do
     context '/users' do
@@ -8,7 +10,7 @@ RSpec.describe 'User' do
         users << { name: 'ana', email: 'ana@ana.com' }
         users << { name: 'joana', email: 'joana@ana.com' }
 
-        users.each { |user| User.create(user) }
+        users.each { |user| UsersQueries.create(user) }
 
         get '/users'
 
@@ -49,7 +51,16 @@ RSpec.describe 'User' do
         expect(res['email']).to eq('ana@ana.com')
       end
 
-      it 'data in blank' do
+      it 'invalid email' do
+        user = { name: 'Fernanda', email: 'fefefe' }.to_json
+
+        post '/users', user
+
+        expect(last_response.status).to eq(422)
+        expect(last_response.body).to include('Email inválido!')
+      end
+
+      it 'blank fields' do
         user = { name: '', email: '' }.to_json
 
         post '/users', user
@@ -57,6 +68,55 @@ RSpec.describe 'User' do
         expect(last_response.status).to eq(422)
         expect(last_response.body).to include('name: não pode ficar em branco!')
         expect(last_response.body).to include('email: não pode ficar em branco!')
+      end
+
+      it 'invalid email and blank fields' do
+        user = { name: '', email: 'fefefe' }.to_json
+
+        post '/users', user
+
+        expect(last_response.status).to eq(422)
+        expect(last_response.body).to include('name: não pode ficar em branco!')
+        expect(last_response.body).to include('Email inválido!')
+      end
+
+      it 'missing fields' do
+        user = { name: 'Fernanda' }.to_json
+
+        post '/users', user
+
+        expect(last_response.status).to eq(422)
+        expect(last_response.body).to include('email: campo faltando!')
+      end
+
+      it 'blank fields and missing fields' do
+        user = { name: '' }.to_json
+
+        post '/users', user
+
+        expect(last_response.status).to eq(422)
+        expect(last_response.body).to include('email: campo faltando!')
+        expect(last_response.body).to include('name: não pode ficar em branco!')
+      end
+
+      it 'invalid email and missing fields' do
+        user = { email: 'aaaaa' }.to_json
+
+        post '/users', user
+
+        expect(last_response.status).to eq(422)
+        expect(last_response.body).to include('name: campo faltando!')
+        expect(last_response.body).to include('Email inválido!')
+      end
+
+      it 'all empty' do
+        user = {}.to_json
+
+        post '/users', user
+
+        expect(last_response.status).to eq(422)
+        expect(last_response.body).to include('name: campo faltando!')
+        expect(last_response.body).to include('email: campo faltando!')
       end
     end
   end

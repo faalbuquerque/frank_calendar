@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 RSpec.describe 'User' do
-  context '.create' do
-    context 'create user' do
-      it 'successfully' do
-        user_data = { name: 'tester', email: 'tester@email.com' }
-        user = User.create(user_data)
+  context '.user_new' do
+    context 'when have new attributes' do
+      it 'pass attributes to user' do
+        params = { name: 'tester', email: 'tester@email.com' }
+        user = User.user_new(params)
 
         expect(user.attributes[:name]).to eq('tester')
         expect(user.attributes[:email]).to eq('tester@email.com')
@@ -13,14 +13,57 @@ RSpec.describe 'User' do
     end
   end
 
-  context '.all' do
-    context 'fetch all users' do
-      it 'successfully' do
-        user_first = { name: 'User First', email: 'user_first@email.com' }
-        User.create(user_first)
+  context '#user_save' do
+    context 'when valid attributes' do
+      it 'persist user successfully' do
+        params = { name: 'abacate', email: 'abacate@email.com' }
+        user = User.user_new(params)
+        user.user_save
 
-        user_last = { name: 'User Last', email: 'user_last@email.com' }
-        User.create(user_last)
+        expect(user.attributes[:name]).to eq('abacate')
+        expect(user.attributes[:email]).to eq('abacate@email.com')
+      end
+    end
+
+    context 'when attributes in blank' do
+      it 'not persist user' do
+        params = { name: '', email: '' }
+        user = User.user_new(params)
+        user.user_save
+
+        expect(user.errors).to include('Não foi possível salvar!')
+      end
+    end
+
+    context 'when invalid email' do
+      it 'not persist user' do
+        params = { name: 'Ana', email: 'anananana' }
+        user = User.user_new(params)
+        user.user_save
+
+        expect(user.errors).to include('Não foi possível salvar!')
+      end
+    end
+
+    context 'when fields are missing' do
+      it 'not persist user' do
+        params = { name: 'Ana' }
+        user = User.user_new(params)
+        user.user_save
+
+        expect(user.errors).to include('Não foi possível salvar!')
+      end
+    end
+  end
+
+  context '.all' do
+    context 'when there are multiple users' do
+      it 'returns list of all users' do
+        params = { name: 'User First', email: 'user_first@email.com' }
+        UsersQueries.create(params)
+
+        params = { name: 'User Last', email: 'user_last@email.com' }
+        UsersQueries.create(params)
 
         user_all = User.all.map!(&:name)
 
