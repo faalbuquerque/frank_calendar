@@ -1,16 +1,14 @@
 require 'pg'
-require_relative '../config/data_base'
+require 'bcrypt'
+require_relative '../models/user'
 
-sql = <<-SQL
-          INSERT INTO users(name, email, created_at, updated_at)
-          VALUES('Maria', 'maria@frankcalendar.com', '#{DateTime.now.to_datetime}',
-                 '#{DateTime.now.to_datetime}'), ('Joao', 'joao@frankcalendar.com',
-                 '#{DateTime.now.to_datetime}', '#{DateTime.now.to_datetime}'),
-                ('Ana', 'ana@frankcalendar.com', '#{DateTime.now.to_datetime}',
-                 '#{DateTime.now.to_datetime}');
-SQL
+password = BCrypt::Password.create('123456')
 
-connection = DataBase.connection
-connection.exec(sql)
+maria = { name: 'Maria', email: 'maria@frankcalendar.com', password_digest: password }
+UsersQueries.create(maria)
 
-connection&.close
+joao = { name: 'Joao', email: 'joao@frankcalendar.com', password_digest: password }
+UsersQueries.create(joao)
+
+ana = { name: 'Ana', email: 'ana@frankcalendar.com', password_digest: password }
+UsersQueries.create(ana)

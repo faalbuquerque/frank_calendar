@@ -43,7 +43,7 @@ module Validate
   end
 
   def not_missing?
-    attributes.keys.eql? known_attributes
+    known_attributes.all? { |attribute| attributes.keys.include? attribute }
   end
 
   def missing_attributes?
