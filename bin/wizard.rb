@@ -1,17 +1,18 @@
 class Wizard
-  @@messages = [
+  MESSAGES = [
     'Gerando Bancos de Dados', 'Rodando Migrations',
     'Gerando Seeds', 'Finalizado!'
-  ]
+  ].freeze
 
-  @@msg_max_size = @@messages.max { |a, b| a > b ? -1 : a < b ? 0 : 1 }.size
+  LARGER_MSG = MESSAGES.max { |a, b| a > b ? -1 : a < b ? 0 : 1 }
+  MARGIN = LARGER_MSG.size + 41
 
   def self.show_splash
     puts File.open('./bin/splash.txt').read
   end
 
   def self.run_database_generate
-    puts @@messages.first.center(@@msg_max_size + 41, '=')
+    puts MESSAGES.first.center(MARGIN, '=')
     start = Time.now
 
     `docker-compose exec db createdb frankcalendar_development -U postgres`
@@ -22,7 +23,7 @@ class Wizard
   end
 
   def self.run_migrations
-    puts @@messages[1].center(@@msg_max_size + 41, '=')
+    puts MESSAGES[1].center(MARGIN, '=')
 
     start = Time.now
 
@@ -39,7 +40,7 @@ class Wizard
   end
 
   def self.run_seeds
-    puts @@messages[2].center(@@msg_max_size + 41, '=')
+    puts MESSAGES[2].center(MARGIN, '=')
     start = Time.now
 
     `docker-compose exec web ruby db/seeds.rb`
@@ -49,7 +50,7 @@ class Wizard
   end
 
   def self.run_closure
-    puts @@messages.last.center(@@msg_max_size + 41, '=')
+    puts MESSAGES.last.center(MARGIN, '=')
   end
 
   def self.display_time_to_process(final, start)
