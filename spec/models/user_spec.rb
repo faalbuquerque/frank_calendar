@@ -4,7 +4,7 @@ RSpec.describe 'User' do
   context '.user_new' do
     context 'when have new attributes' do
       it 'pass attributes to user' do
-        params = { name: 'tester', email: 'tester@email.com' }
+        params = { name: 'tester', email: 'tester@email.com', password_digest: '123456' }
         user = User.user_new(params)
 
         expect(user.attributes[:name]).to eq('tester')
@@ -16,7 +16,7 @@ RSpec.describe 'User' do
   context '#user_save' do
     context 'when valid attributes' do
       it 'persist user successfully' do
-        params = { name: 'abacate', email: 'abacate@email.com' }
+        params = { name: 'abacate', email: 'abacate@email.com', password_digest: '123456' }
         user = User.user_new(params)
         user.user_save
 
@@ -27,7 +27,7 @@ RSpec.describe 'User' do
 
     context 'when attributes in blank' do
       it 'not persist user' do
-        params = { name: '', email: '' }
+        params = { name: '', email: '', password_digest: '' }
         user = User.user_new(params)
         user.user_save
 
@@ -59,10 +59,10 @@ RSpec.describe 'User' do
   context '.all' do
     context 'when there are multiple users' do
       it 'returns list of all users' do
-        params = { name: 'User First', email: 'user_first@email.com' }
+        params = { name: 'User First', email: 'user_first@email.com', password_digest: '123456' }
         UsersQueries.create(params)
 
-        params = { name: 'User Last', email: 'user_last@email.com' }
+        params = { name: 'User Last', email: 'user_last@email.com', password_digest: '123456' }
         UsersQueries.create(params)
 
         user_all = User.all.map!(&:name)

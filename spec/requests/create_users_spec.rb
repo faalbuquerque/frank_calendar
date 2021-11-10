@@ -7,8 +7,8 @@ RSpec.describe 'User' do
     context '/users' do
       it 'successfully' do
         users = []
-        users << { name: 'ana', email: 'ana@ana.com' }
-        users << { name: 'joana', email: 'joana@ana.com' }
+        users << { name: 'ana', email: 'ana@ana.com', password_digest: '123456' }
+        users << { name: 'joana', email: 'joana@ana.com', password_digest: '123456' }
 
         users.each { |user| UsersQueries.create(user) }
 
@@ -39,7 +39,7 @@ RSpec.describe 'User' do
   context 'POST' do
     context '/users' do
       it 'successfully' do
-        user = { name: 'ana', email: 'ana@ana.com' }.to_json
+        user = { name: 'ana', email: 'ana@ana.com', password_digest: '123456' }.to_json
 
         post '/users', user
 
