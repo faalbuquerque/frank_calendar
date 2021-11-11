@@ -5,11 +5,10 @@ class Wizard
   ].freeze
 
   LARGER_MSG = MESSAGES.max do |a, b|
-    if a > b
-      -1
-    else
-      a < b ? 0 : 1
-    end
+    next -1 if a > b
+    next 0 if a < b
+
+    1
   end
 
   MARGIN = LARGER_MSG.size + 41
