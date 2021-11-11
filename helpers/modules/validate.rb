@@ -8,25 +8,40 @@ module Validate
   private
 
   def set_errors_validations
-    set_missing_errors if missing_attributes? && validate.include?(:not_missing)
-    set_email_errors if attributes['email'] && not_valid_email? && validate.include?(:valid_email)
-    set_blank_errors if validate.include?(:not_blank)
+    set_missing_errors
+    set_email_invalid_errors
+    set_registered_errors
+    set_blank_errors
+  end
+
+  def check_missing_errors
+    missing_attributes? && validate.include?(:not_missing)
   end
 
   def set_missing_errors
-    missing_attributes.each do |key|
-      errors << "#{key}: campo faltando!"
-    end
+    missing_attributes.each { |key| errors << "#{key}: campo faltando!" } if check_missing_errors
   end
 
-  def set_email_errors
-    errors << 'Email inválido!'
+  def check_email_invalid_errors
+    attributes['email'] && not_valid_email? && validate.include?(:valid_email)
+  end
+
+  def set_email_invalid_errors
+    errors << 'Email inválido!' if check_email_invalid_errors
+  end
+
+  def check_registered_errors
+    attributes['email'] && not_unique_email? && validate.include?(:unique_email)
+  end
+
+  def set_registered_errors
+    errors << 'Este email já foi utilizado!' if check_registered_errors
   end
 
   def set_blank_errors
     attributes.map do |key, value|
       message = "#{key}: não pode ficar em branco!"
-      errors << message if known_attributes.include?(key) && value.strip.empty?
+      errors << message if known_attributes.include?(key) && value.strip.empty? && validate.include?(:not_blank)
     end
   end
 
@@ -40,6 +55,14 @@ module Validate
 
   def not_valid_email?
     !valid_email?
+  end
+
+  def unique_email?
+    !not_unique_email?
+  end
+
+  def not_unique_email?
+    self.class.all.map { |obj| obj.attributes[:email] }.include?(attributes['email'])
   end
 
   def not_missing?

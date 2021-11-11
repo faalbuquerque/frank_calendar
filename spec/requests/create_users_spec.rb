@@ -118,6 +118,17 @@ RSpec.describe 'User' do
         expect(last_response.body).to include('name: campo faltando!')
         expect(last_response.body).to include('email: campo faltando!')
       end
+
+      it 'email already registered' do
+        user = { name: 'ana', email: 'ana@ana.com', password_digest: '123456' }.to_json
+        post '/users', user
+
+        user_already = { name: 'ana', email: 'ana@ana.com', password_digest: '123456' }.to_json
+        post '/users', user_already
+
+        expect(last_response.status).to eq(422)
+        expect(last_response.body).to include('Este email já foi utilizado!')
+      end
     end
   end
 end
