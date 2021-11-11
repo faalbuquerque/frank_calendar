@@ -5,7 +5,7 @@ require_relative './model_base'
 class User < ModelBase
   attr_accessor :id, :name, :email, :created_at, :updated_at
 
-  validate :not_blank, :valid_email, :not_missing
+  validate :not_blank, :valid_email, :not_missing, :unique_email
 
   def initialize(hash)
     super

@@ -4,7 +4,14 @@ class Wizard
     'Gerando Seeds', 'Finalizado!'
   ].freeze
 
-  LARGER_MSG = MESSAGES.max { |a, b| a > b ? -1 : a < b ? 0 : 1 }
+  LARGER_MSG = MESSAGES.max do |a, b|
+    if a > b
+      -1
+    else
+      a < b ? 0 : 1
+    end
+  end
+
   MARGIN = LARGER_MSG.size + 41
 
   def self.show_splash
