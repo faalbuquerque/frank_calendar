@@ -1,4 +1,6 @@
 module Validate
+  NOT_USED = %i[@id @attributes @errors @created_at @updated_at @known_attributes].freeze
+
   def valid?
     return true if catch_validations
 
@@ -78,9 +80,9 @@ module Validate
   end
 
   def known_attributes
-    regex = /(?:^|(?=[^']).\b)(created_at|updated_at|id|errors|attributes)\b/
-    @known_attributes ||= to_yaml.split.join(' ').gsub(regex, '')
-                                 .delete(':').split('[]').pop.strip.split
+    attributes = instance_variables - NOT_USED
+
+    @known_attributes ||= attributes.map { |key| key.to_s.delete('@') }
   end
 
   def catch_validations
