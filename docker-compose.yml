@@ -25,3 +25,5 @@ services:
       POSTGRES_HOST:
       POSTGRES_USER:
       POSTGRES_PASSWORD:
+    ports:
+      - "5432:5432"

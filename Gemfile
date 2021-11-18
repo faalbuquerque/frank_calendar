@@ -6,6 +6,7 @@ gem 'bcrypt'
 gem 'byebug'
 gem 'pg'
 gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'webrick'
 
 group :test, :development do

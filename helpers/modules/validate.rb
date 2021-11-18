@@ -80,9 +80,9 @@ module Validate
   end
 
   def known_attributes
-    attributes = instance_variables - NOT_USED
+    usable_attributes = instance_variables - NOT_USED
 
-    @known_attributes ||= attributes.map { |key| key.to_s.delete('@') }
+    @known_attributes ||= usable_attributes.map { |key| key.to_s.delete('@') }
   end
 
   def catch_validations

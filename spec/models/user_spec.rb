@@ -72,4 +72,42 @@ RSpec.describe 'User' do
       end
     end
   end
+
+  context '.find_by' do
+    context 'when searching for user parameters' do
+      it 'return user if searching for name' do
+        UsersQueries.create(name: 'User First', email: 'user_first@email.com', password_digest: '123456')
+
+        user = User.find_by(name: 'User First')
+
+        expect(user.first.name).to eq('User First')
+        expect(user.first.email).to eq('user_first@email.com')
+      end
+
+      it 'return user if searching for email' do
+        params = { name: 'User First', email: 'user_first@email.com', password_digest: '123456' }
+        UsersQueries.create(params)
+
+        user = User.find_by(email: 'user_first@email.com')
+
+        expect(user.first.name).to eq('User First')
+        expect(user.first.email).to eq('user_first@email.com')
+      end
+    end
+  end
+
+  context '.find' do
+    context 'when search user by id' do
+      it 'return user if successfully' do
+        params = { name: 'User First', email: 'user_first@email.com', password_digest: '123456' }
+        UsersQueries.create(params)
+
+        user = User.find_by(email: 'user_first@email.com')
+
+        user_id = User.find(user.first.id.to_s)
+
+        expect(user_id.attributes['id']).to eq(user.first.id)
+      end
+    end
+  end
 end

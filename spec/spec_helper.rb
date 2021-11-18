@@ -2,7 +2,9 @@ require 'simplecov'
 
 SimpleCov.start
 
-require './app'
+require './controllers/users_controller'
+require './controllers/home_controller'
+require './controllers/sessions_controller'
 require 'rspec'
 require 'rack/test'
 require 'pg'
