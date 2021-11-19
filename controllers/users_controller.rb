@@ -17,12 +17,9 @@ get '/users/:id' do
   if user == []
     JSON message: 'Nenhum usuário encontrado!'
   else
-    json = user.attributes
+    user.attributes['password'] = 'FILTERED'
 
-    json.tap { |hash| hash['password'] = 'FILTERED' }
-    json.delete('password_digest')
-
-    json.to_json
+    user.attributes.except('password_digest').to_json
   end
 end
 
@@ -37,11 +34,11 @@ end
 private
 
 def user_params
-  json = JSON.parse(request.body.read)
-  json.tap do |hash|
+  user_hash = JSON.parse(request.body.read)
+
+  user_hash.tap do |hash|
     hash['password_digest'] = BCrypt::Password.create(hash['password']) if hash['password']
   end
-  json.delete('password')
 
-  json
+  user_hash.except('password')
 end

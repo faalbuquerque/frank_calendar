@@ -38,16 +38,13 @@ class UsersQueries < BaseQueries
   end
 
   def self.return_clean_user(hash_data)
-    if hash_data.nil?
-      []
-    else
-      hash_data.tap do |hash|
-        hash['password'] = 'FILTERED'
-      end
-      hash_data.delete('password_digest')
+    return [] if hash_data.nil?
 
-      User.user_new(hash_data)
-    end
+    hash_data['password'] = 'FILTERED'
+
+    hash_data.delete('password_digest')
+
+    User.user_new(hash_data)
   end
 
   def self.find(id)
