@@ -1,33 +1,35 @@
-require 'sinatra'
-require 'sinatra/cookies'
-require './helpers/modules/users/session'
+require './controllers/application_controller'
 require './models/user'
 
-set :default_content_type, :json
-
-helpers Authentication
-
 post '/users/login' do
-  user = User.user_new(sign_in(login_params))
+  user = User.find_by(email: login_params[:email]).first
 
-  if user.attributes.empty?
-    status 401 and JSON message: 'Erro de autenticação!'
-  else
+  if user&.authenticate(login_params[:password])
+    hash = user.attributes
+
+    hash.delete(:password_digest)
+
+    session[:user] = hash
+
     json = user.attributes
 
-    json.tap do |hash|
-      hash['password'] = 'FILTERED'
-      hash['message'] = 'Usuario autenticado com sucesso!'
+    json.tap do |hash_user|
+      hash_user['password'] = 'FILTERED'
+      hash_user['message'] = 'Usuario autenticado com sucesso!'
     end
+
     json.delete('password_digest')
 
     json.to_json
+  else
+    session[:user] = nil
+    status 401 and JSON message: 'Erro de autenticação!'
   end
 end
 
 private
 
 def login_params
-  json = JSON.parse(request.body.read)
-  { email: json['email'], password: json['password'] }
+  @json ||= JSON.parse(request.body.read)
+  { email: @json['email'], password: @json['password'] }
 end

@@ -1,7 +1,5 @@
-require 'sinatra'
+require './controllers/application_controller'
 require './models/user'
-
-set :default_content_type, :json
 
 get '/users' do
   users = User.all
