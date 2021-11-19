@@ -5,22 +5,12 @@ post '/users/login' do
   user = User.find_by(email: login_params[:email]).first
 
   if user&.authenticate(login_params[:password])
-    hash = user.attributes
+    session[:user] = user.attributes.except(:password_digest)
 
-    hash.delete(:password_digest)
+    user.attributes['password'] = 'FILTERED'
+    user.attributes['message'] = 'Usuario autenticado com sucesso!'
 
-    session[:user] = hash
-
-    json = user.attributes
-
-    json.tap do |hash_user|
-      hash_user['password'] = 'FILTERED'
-      hash_user['message'] = 'Usuario autenticado com sucesso!'
-    end
-
-    json.delete('password_digest')
-
-    json.to_json
+    user.attributes.except(:password_digest).to_json
   else
     session[:user] = nil
     status 401 and JSON message: 'Erro de autenticação!'
@@ -30,6 +20,6 @@ end
 private
 
 def login_params
-  @json ||= JSON.parse(request.body.read)
-  { email: @json['email'], password: @json['password'] }
+  @hash_login ||= JSON.parse(request.body.read)
+  { email: @hash_login['email'], password: @hash_login['password'] }
 end
