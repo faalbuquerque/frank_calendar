@@ -1,6 +1,6 @@
-require 'json'
 require_relative '../queries/users_queries'
 require_relative './model_base'
+require 'bcrypt'
 
 class User < ModelBase
   attr_accessor :id, :name, :email, :created_at, :updated_at
@@ -12,6 +12,7 @@ class User < ModelBase
     @id = hash[:id]
     @name = hash[:name]
     @email = hash[:email]
+    @password_digest = hash[:password_digest]
     @created_at = hash[:created_at]
     @updated_at = hash[:updated_at]
   end
@@ -28,5 +29,23 @@ class User < ModelBase
     errors << 'Não foi possível salvar!' and return false unless valid?
 
     UsersQueries.create(attributes)
+  end
+
+  def self.find(id)
+    UsersQueries.find(id)
+  end
+
+  def self.find_by(attributes)
+    UsersQueries.find_by(attributes).map { |user| new(user) }
+  end
+
+  def authenticate(password)
+    BCrypt::Password.new(catch_password) == password
+  end
+
+  private
+
+  def catch_password
+    @password_digest
   end
 end

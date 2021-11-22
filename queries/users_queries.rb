@@ -7,7 +7,6 @@ class UsersQueries < BaseQueries
 
   def self.fetch_all
     connect_to_db
-
     lines = @connection.exec('SELECT * FROM users')
 
     lines.map do |line|
@@ -34,6 +33,61 @@ class UsersQueries < BaseQueries
     ensure
       close_connection
     end
-    User.user_new(hash.merge({ created_at: date, updated_at: date }))
+
+    return_clean_user(hash)
+  end
+
+  def self.return_clean_user(hash_data)
+    return [] if hash_data.nil?
+
+    hash_data['password'] = 'FILTERED'
+
+    hash_data.delete('password_digest')
+
+    User.user_new(hash_data)
+  end
+
+  def self.find(id)
+    connect_to_db
+    begin
+      sql = "SELECT * FROM users WHERE id = #{id} LIMIT 1;"
+      result = @connection.exec(sql)
+    rescue PG::Error => e
+      raise "#{e.message} maybe no database?"
+    ensure
+      close_connection
+    end
+
+    return_clean_user(result.first)
+  end
+
+  def self.find_by(attributes)
+    connect_to_db and @sql = 'SELECT * FROM users WHERE'
+
+    treat_sql_attributes(attributes)
+    connection_exec_sql(@sql)
+  rescue PG::Error => e
+    raise "#{e.message} maybe no database?"
+  ensure
+    close_connection
+  end
+
+  def self.treat_sql_attributes(attributes)
+    attributes.each do |attribute|
+      next if attribute.first == 'password'
+
+      @sql += " #{attribute.first} = '#{attribute.last}'" if attributes.first == attribute
+      @sql += " AND #{attribute.first} = '#{attribute.last}'" if attributes.first != attribute
+    end
+  end
+
+  def self.connection_exec_sql(sql)
+    lines = @connection.exec(sql)
+
+    lines.map do |line|
+      { id: line['id'], name: line['name'], email: line['email'],
+        created_at: line['created_at'], updated_at: line['updated_at'],
+        password_digest: line['password_digest'] }
+    end
   end
 end

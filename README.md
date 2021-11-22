@@ -150,6 +150,35 @@ Output caso nao existam usuários criados:
 }
 ```
 
+
+<h3 style="color:#2C3E50"> Endpoint para visualizar um usuário:</h3>
+
+```
+Rota: GET http://127.0.0.1:4567/users/:id
+
+Output:
+
+[
+  {
+    "id": "3",
+    "name": "Ana",
+    "email": "ana@frankcalendar.com",
+    "created_at": "2021-11-17",
+    "updated_at": "2021-11-17",
+    "password": "FILTERED",
+    "created_at": "2021-11-18T11:40:57-03:00",
+    "updated_at": "2021-11-18T11:40:57-03:00"
+  }
+]
+
+Output caso nao exista um usuario com o id informado:
+
+{
+  "message": "Nenhum usuário encontrado!"
+}
+```
+
+
 <h3 style="color:#2C3E50"> Endpoint para adicionar usuário: </h3>
 
 ```
@@ -159,14 +188,16 @@ Input:
 
 {
   "name": "ana",
-  "email": "ana@frankcalendar.com"
+  "email": "ana@frankcalendar.com",
+  "password": "123456"
 }
 
 Output em caso de sucesso:
 
 {
   "name": "ana",
-  "email": "ana@frankcalendar.com"
+  "email": "ana@frankcalendar.com",
+  "password": "FILTERED"
 }
 
 Output em caso de falha(campos em branco):
@@ -174,6 +205,7 @@ Output em caso de falha(campos em branco):
 [
   "name: não pode ficar em branco!",
   "email: não pode ficar em branco!"
+  "Não foi possível salvar!"
 ]
 
 Output em caso de falha(faltando campos):
@@ -181,10 +213,48 @@ Output em caso de falha(faltando campos):
 [
   "name: campo faltando!",
   "email: campo faltando!"
+  "Não foi possível salvar!"
 ]
 
 Output em caso de falha(email inválido):
 
 [
-  "Email inválido!"
+  "Este email já foi utilizado!",
+  "Não foi possível salvar!"
 ]
+```
+
+<br>
+<h2 > Autenticação de usuario pela API: </h2>
+<br>
+
+```
+Rota:  POST http://127.0.0.1:4567/users/login
+
+Input:
+
+{
+	"email": "maria@frankcalendar.com",
+	"password": "123456"
+}
+
+Output em caso de sucesso:
+
+{
+  "id": "1",
+  "name": "Maria",
+  "email": "maria@frankcalendar.com",
+  "created_at": "2021-11-17",
+  "updated_at": "2021-11-17",
+  "token": "bcdb263b-6ed0-49c1-bc39-1d69d7a78727",
+  "password": "FILTERED",
+  "message": "Usuario autenticado com sucesso!"
+}
+
+Output em caso de falha(campos em branco, faltando campos ou senha incorreta):
+
+{
+  "message": "Erro de autenticação!"
+}
+
+```
