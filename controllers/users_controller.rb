@@ -17,9 +17,9 @@ get '/users/:id' do
   if user == []
     JSON message: 'Nenhum usuário encontrado!'
   else
-    user.attributes['password'] = 'FILTERED'
+    filtered_pass(user.attributes)
 
-    user.attributes.except('password_digest').to_json
+    clean_hash(user.attributes).to_json
   end
 end
 
@@ -40,5 +40,5 @@ def user_params
     hash['password_digest'] = BCrypt::Password.create(hash['password']) if hash['password']
   end
 
-  user_hash.except('password')
+  clean_hash(user_hash)
 end

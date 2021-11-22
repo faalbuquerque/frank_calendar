@@ -7,10 +7,11 @@ post '/users/login' do
   if user&.authenticate(login_params[:password])
     session[:user] = user.attributes.except(:password_digest)
 
-    user.attributes['password'] = 'FILTERED'
+    filtered_pass(user.attributes)
+
     user.attributes['message'] = 'Usuario autenticado com sucesso!'
 
-    user.attributes.except(:password_digest).to_json
+    clean_hash(user.attributes).to_json
   else
     session[:user] = nil
     status 401 and JSON message: 'Erro de autenticação!'
