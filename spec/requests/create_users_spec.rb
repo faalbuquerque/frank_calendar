@@ -4,32 +4,25 @@ RSpec.describe 'Create users' do
   context 'when viewing created users' do
     context 'GET /users' do
       it 'view existing users' do
-        users = []
-        users << { name: 'ana', email: 'ana@ana.com', password_digest: '123456' }
-        users << { name: 'joana', email: 'joana@ana.com', password_digest: '123456' }
-
-        users.each { |user| UsersQueries.create(user) }
+        user_create('ana', 'ana@ana.com', '123456')
+        user_create('joana', 'joana@ana.com', '123456')
 
         get '/users'
 
-        res = JSON.parse(last_response.body)
-
         expect(last_response.status).to eq(200)
         expect(last_response.content_type).to eq('application/json')
-        expect(res.first['name']).to eq('ana')
-        expect(res.first['email']).to eq('ana@ana.com')
-        expect(res.last['name']).to eq('joana')
-        expect(res.last['email']).to eq('joana@ana.com')
+        expect(json_parse.first['name']).to eq('ana')
+        expect(json_parse.first['email']).to eq('ana@ana.com')
+        expect(json_parse.last['name']).to eq('joana')
+        expect(json_parse.last['email']).to eq('joana@ana.com')
       end
 
       it 'there are no users' do
         get '/users'
 
-        res = JSON.parse(last_response.body)
-
         expect(last_response.status).to eq(200)
         expect(last_response.content_type).to eq('application/json')
-        expect(res['message']).to eq('Nenhum usuário criado!')
+        expect(json_parse['message']).to eq('Nenhum usuário criado!')
       end
     end
   end
@@ -41,12 +34,10 @@ RSpec.describe 'Create users' do
 
         post '/users', user
 
-        res = JSON.parse(last_response.body)
-
         expect(last_response.status).to eq(201)
         expect(last_response.content_type).to eq('application/json')
-        expect(res['name']).to eq('ana')
-        expect(res['email']).to eq('ana@ana.com')
+        expect(json_parse['name']).to eq('ana')
+        expect(json_parse['email']).to eq('ana@ana.com')
       end
 
       it 'with invalid email' do
@@ -118,8 +109,7 @@ RSpec.describe 'Create users' do
       end
 
       it 'with email already registered' do
-        user = { name: 'ana', email: 'ana@ana.com', password_digest: '123456' }.to_json
-        post '/users', user
+        user_create('ana', 'ana@ana.com', '123456')
 
         user_already = { name: 'ana', email: 'ana@ana.com', password_digest: '123456' }.to_json
         post '/users', user_already

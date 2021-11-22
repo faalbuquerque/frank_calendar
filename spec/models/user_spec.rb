@@ -59,11 +59,8 @@ RSpec.describe 'User' do
   context '.all' do
     context 'when there are multiple users' do
       it 'returns list of all users' do
-        params = { name: 'User First', email: 'user_first@email.com', password_digest: '123456' }
-        UsersQueries.create(params)
-
-        params = { name: 'User Last', email: 'user_last@email.com', password_digest: '123456' }
-        UsersQueries.create(params)
+        user_create('User First', 'user_first@email.com', '123456')
+        user_create('User Last', 'user_last@email.com', '123456')
 
         user_all = User.all.map!(&:name)
 
@@ -76,7 +73,7 @@ RSpec.describe 'User' do
   context '.find_by' do
     context 'when searching for user parameters' do
       it 'return user if searching for name' do
-        UsersQueries.create(name: 'User First', email: 'user_first@email.com', password_digest: '123456')
+        user_create('User First', 'user_first@email.com', '123456')
 
         user = User.find_by(name: 'User First')
 
@@ -85,8 +82,7 @@ RSpec.describe 'User' do
       end
 
       it 'return user if searching for email' do
-        params = { name: 'User First', email: 'user_first@email.com', password_digest: '123456' }
-        UsersQueries.create(params)
+        user_create('User First', 'user_first@email.com', '123456')
 
         user = User.find_by(email: 'user_first@email.com')
 
@@ -99,8 +95,7 @@ RSpec.describe 'User' do
   context '.find' do
     context 'when search user by id' do
       it 'return user if successfully' do
-        params = { name: 'User First', email: 'user_first@email.com', password_digest: '123456' }
-        UsersQueries.create(params)
+        user_create('User First', 'user_first@email.com', '123456')
 
         user = User.find_by(email: 'user_first@email.com')
 
