@@ -13,6 +13,7 @@ require_relative './support/user_helper'
 require_relative './support/json_helper'
 
 ENV['DATABASE'] = 'test'
+BCrypt::Engine.cost = 6
 
 def app
   Sinatra::Application

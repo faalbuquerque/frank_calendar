@@ -5,7 +5,7 @@ post '/users/login' do
   user = User.find_by(email: login_params[:email]).first
 
   if user&.authenticate(login_params[:password])
-    session[:user] = user.attributes.except(:password_digest)
+    session[:user] = clean_hash(user.attributes)
 
     filtered_pass(user.attributes)
 
