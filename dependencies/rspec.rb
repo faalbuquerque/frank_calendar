@@ -1,0 +1,6 @@
+require './controllers/users_controller'
+require './controllers/home_controller'
+require './controllers/sessions_controller'
+require './config/data_base'
+require './spec/support/user_helper'
+require './spec/support/json_helper'

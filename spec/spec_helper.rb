@@ -2,17 +2,16 @@ require 'simplecov'
 
 SimpleCov.start
 
-require './controllers/users_controller'
-require './controllers/home_controller'
-require './controllers/sessions_controller'
-require 'rspec'
-require 'rack/test'
 require 'pg'
-require_relative '../config/data_base'
-require_relative './support/user_helper'
-require_relative './support/json_helper'
+require 'rack/test'
+require 'rspec'
+
+require './dependencies/rspec'
 
 ENV['DATABASE'] = 'test'
+
+TEST_BCRYPT_COST = 6
+BCrypt::Engine.cost = TEST_BCRYPT_COST.freeze
 
 def app
   Sinatra::Application
