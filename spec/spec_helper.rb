@@ -10,8 +10,8 @@ require './dependencies/rspec'
 
 ENV['DATABASE'] = 'test'
 
-BCRYPT_COST = 6.freeze
-BCrypt::Engine.cost = BCRYPT_COST
+TEST_BCRYPT_COST = 6
+BCrypt::Engine.cost = TEST_BCRYPT_COST.freeze
 
 def app
   Sinatra::Application

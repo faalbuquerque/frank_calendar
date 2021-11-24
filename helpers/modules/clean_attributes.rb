@@ -1,6 +1,10 @@
 module CleanAttributes
+  def digest_or_password(hash)
+    hash.include?(:password_digest) ? :password_digest : :password
+  end
+
   def clean_hash(hash)
-    hash.include?(:password_digest || :password) ? hash.except(:password_digest || :password) : hash
+    hash.include?(digest_or_password(hash)) ? hash.except(:password_digest, :password) : hash
   end
 
   def filtered_pass(hash)
