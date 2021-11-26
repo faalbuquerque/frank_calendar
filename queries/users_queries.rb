@@ -37,6 +37,21 @@ class UsersQueries < BaseQueries
     return_clean_user(hash)
   end
 
+  def self.user_sql_update(id, hash)
+    "UPDATE users SET #{hash.map { |key, value| "#{key} = '#{value}'" }.join(', ')}, updated_at = '#{date}'
+    WHERE id = #{id.to_i}\;"
+  end
+
+  def self.update(id, hash)
+    connect_to_db and @connection.exec(user_sql_update(id, hash))
+
+    return_clean_user(hash)
+  rescue PG::Error => e
+    raise "#{e.message} maybe no database?"
+  ensure
+    close_connection
+  end
+
   def self.return_clean_user(hash_data)
     return [] if hash_data.nil?
 

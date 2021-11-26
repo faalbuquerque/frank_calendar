@@ -31,6 +31,16 @@ class User < ModelBase
     UsersQueries.create(attributes)
   end
 
+  def user_update(user_params)
+    user_params.map do |key, value|
+      return false if value.strip.empty?
+
+      return !!(user_params['email'] =~ URI::MailTo::EMAIL_REGEXP) if key.include?('email')
+    end
+
+    UsersQueries.update(attributes['id'], user_params)
+  end
+
   def self.find(id)
     UsersQueries.find(id)
   end
