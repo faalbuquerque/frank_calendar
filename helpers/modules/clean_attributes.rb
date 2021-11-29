@@ -1,13 +1,13 @@
 module CleanAttributes
-  def digest_or_password(hash)
-    hash.include?(:password_digest) ? :password_digest : :password
-  end
-
   def clean_hash(hash)
-    hash.include?(digest_or_password(hash)) ? hash.except(:password_digest, :password) : hash
+    hash.except(:password_digest, 'password_digest')
   end
 
   def filtered_pass(hash)
-    hash.include?(hash['password']) ? hash['password'] = 'FILTERED' : 'No password'
+    if hash.include?('password_digest')
+      hash['password'] = 'FILTERED'
+    else
+      'No password'
+    end
   end
 end

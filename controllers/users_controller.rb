@@ -31,14 +31,27 @@ post '/users' do
   status 422 and @user.errors.to_json
 end
 
+patch '/users/:id' do
+  user = User.find(params['id'])
+
+  JSON message: 'Nenhum usuário encontrado!' if user == []
+
+  if user.user_update(user_params)
+    user_params['message'] = 'Usuário atualizado!'
+
+    filtered_pass(user_params)
+    clean_hash(user_params).to_json
+  else
+    status 422 and user.errors.to_json
+  end
+end
+
 private
 
 def user_params
-  user_hash = JSON.parse(request.body.read)
+  @user_hash ||= JSON.parse(request.body.read)
 
-  user_hash.tap do |hash|
-    hash['password_digest'] = BCrypt::Password.create(hash['password']) if hash['password']
-  end
+  @user_hash['password_digest'] = BCrypt::Password.create(@user_hash['password_digest']) if @user_hash['password']
 
-  clean_hash(user_hash)
+  @user_hash
 end

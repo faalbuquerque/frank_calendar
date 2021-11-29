@@ -106,16 +106,20 @@ RSpec.describe 'Create users' do
         expect(last_response.status).to eq(422)
         expect(last_response.body).to include('name: campo faltando!')
         expect(last_response.body).to include('email: campo faltando!')
+        expect(last_response.body).to include('password_digest: campo faltando!')
+        expect(last_response.body).to include('Não foi possível salvar!')
       end
 
       it 'with email already registered' do
         user_create('ana', 'ana@ana.com', '123456')
 
         user_already = { name: 'ana', email: 'ana@ana.com', password_digest: '123456' }.to_json
+
         post '/users', user_already
 
         expect(last_response.status).to eq(422)
         expect(last_response.body).to include('Este email já foi utilizado!')
+        expect(last_response.body).to include('Não foi possível salvar!')
       end
     end
   end

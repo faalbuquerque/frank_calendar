@@ -31,6 +31,17 @@ class User < ModelBase
     UsersQueries.create(attributes)
   end
 
+  def user_update(user_params)
+    user_params = user_params.transform_keys(&:to_sym)
+
+    user_params[:password_digest] = BCrypt::Password.create(user_params[:password]) if user_params[:password]
+    user_params.each_key { |key| attributes[key] = user_params[key] }
+
+    errors << 'Não foi possível atualizar!' and return false unless custom_valid?(:not_blank, :valid_email)
+
+    UsersQueries.update(id, user_params)
+  end
+
   def self.find(id)
     UsersQueries.find(id)
   end

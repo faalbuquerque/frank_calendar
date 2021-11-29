@@ -6,7 +6,7 @@ class ModelBase
   include Validate
 
   def initialize(hash)
-    @attributes = hash
+    @attributes = hash.transform_keys(&:to_sym)
     @errors = []
   end
 

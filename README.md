@@ -114,7 +114,7 @@ psql -U postgres
 
 <h3 style="color:#2C3E50"> Endpoint para visualizar todos os usuários:</h3>
 
-```
+```json
 Rota: GET http://127.0.0.1:4567/users
 
 Output:
@@ -153,7 +153,7 @@ Output caso nao existam usuários criados:
 
 <h3 style="color:#2C3E50"> Endpoint para visualizar um usuário:</h3>
 
-```
+```json
 Rota: GET http://127.0.0.1:4567/users/:id
 
 Output:
@@ -181,7 +181,7 @@ Output caso nao exista um usuario com o id informado:
 
 <h3 style="color:#2C3E50"> Endpoint para adicionar usuário: </h3>
 
-```
+```json
 Rota:  POST http://127.0.0.1:4567/users
 
 Input:
@@ -224,11 +224,41 @@ Output em caso de falha(email inválido):
 ]
 ```
 
+<h3 style="color:#2C3E50"> Endpoint para alterar usuário: </h3>
+
+```json
+Rota:  PATCH http://127.0.0.1:4567/users/:id
+
+Input:
+
+{
+  "name": "ana",
+  "email": "ana@frankcalendar.com",
+  "password": "123456"
+}
+
+Output em caso de sucesso:
+
+{
+  "name": "ana",
+  "email": "ana@frankcalendar.com",
+  "password": "FILTERED"
+  "message": "Usuário atualizado!"
+}
+
+Output em caso de falha(dados inválidos):
+
+{
+  "message": "Não foi possivel atualizar!"
+}
+
+```
+
 <br>
 <h2 > Autenticação de usuario pela API: </h2>
 <br>
 
-```
+```json
 Rota:  POST http://127.0.0.1:4567/users/login
 
 Input:
