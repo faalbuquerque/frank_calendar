@@ -4,9 +4,7 @@ module CleanAttributes
   end
 
   def filtered_pass(hash)
-    if hash.include?(hash['password'])
-      hash['password'] = 'FILTERED'
-    elsif hash.include?('password_digest')
+    if hash.include?('password_digest')
       hash['password'] = 'FILTERED'
     else
       'No password'

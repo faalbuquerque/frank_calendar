@@ -4,16 +4,22 @@ module Validate
   def valid?
     return true if catch_validations
 
-    set_errors_validations and false
+    errors_validations and false
+  end
+
+  def custom_valid?(*args)
+    return true if catch_validations(args)
+
+    errors_validations(args) and false
   end
 
   private
 
-  def set_errors_validations
-    set_missing_errors
-    set_email_invalid_errors
-    set_registered_errors
-    set_blank_errors
+  def errors_validations(args = validate)
+    set_missing_errors if args&.include?(:not_missing)
+    set_email_invalid_errors if args&.include?(:valid_email)
+    set_email_not_unique_errors if args&.include?(:unique_email)
+    set_blank_errors if args&.include?(:not_blank)
   end
 
   def check_missing_errors
@@ -25,19 +31,19 @@ module Validate
   end
 
   def check_email_invalid_errors
-    attributes['email'] && not_valid_email? && validate.include?(:valid_email)
+    attributes[:email] && not_valid_email? && validate.include?(:valid_email)
   end
 
   def set_email_invalid_errors
     errors << 'Email inválido!' if check_email_invalid_errors
   end
 
-  def check_registered_errors
-    attributes['email'] && not_unique_email? && validate.include?(:unique_email)
+  def check_email_not_unique_errors
+    attributes[:email] && not_unique_email? && validate.include?(:unique_email)
   end
 
-  def set_registered_errors
-    errors << 'Este email já foi utilizado!' if check_registered_errors
+  def set_email_not_unique_errors
+    errors << 'Este email já foi utilizado!' if check_email_not_unique_errors
   end
 
   def set_blank_errors
@@ -52,7 +58,7 @@ module Validate
   end
 
   def valid_email?
-    !!(attributes['email'] =~ URI::MailTo::EMAIL_REGEXP)
+    !!(attributes[:email] =~ URI::MailTo::EMAIL_REGEXP)
   end
 
   def not_valid_email?
@@ -64,7 +70,7 @@ module Validate
   end
 
   def not_unique_email?
-    self.class.all.map { |obj| obj.attributes[:email] }.include?(attributes['email'])
+    self.class.all.map { |obj| obj.attributes[:email] }.include?(attributes[:email])
   end
 
   def not_missing?
@@ -82,10 +88,10 @@ module Validate
   def known_attributes
     usable_attributes = instance_variables - NOT_USED
 
-    @known_attributes ||= usable_attributes.map { |key| key.to_s.delete('@') }
+    @known_attributes ||= usable_attributes.map { |key| key.to_s.delete('@').to_sym }
   end
 
-  def catch_validations
-    validate.all? { |symbol| send("#{symbol}?".to_sym) }
+  def catch_validations(rules = validate)
+    rules.all? { |symbol| send("#{symbol}?".to_sym) }
   end
 end

@@ -45,7 +45,10 @@ RSpec.describe 'Update users' do
 
         expect(last_response.status).to eq(422)
         expect(last_response.content_type).to eq('application/json')
-        expect(last_response.body).to include('Não foi possivel atualizar!')
+        expect(last_response.body).to include('Não foi possível atualizar!')
+        expect(last_response.body).to include('name: não pode ficar em branco!')
+        expect(last_response.body).to include('email: não pode ficar em branco!')
+        expect(last_response.body).to include('password_digest: não pode ficar em branco!')
       end
 
       it 'failure update if invalid email' do
@@ -59,7 +62,8 @@ RSpec.describe 'Update users' do
 
         expect(last_response.status).to eq(422)
         expect(last_response.content_type).to eq('application/json')
-        expect(last_response.body).to include('Não foi possivel atualizar!')
+        expect(last_response.body).to include('Não foi possível atualizar!')
+        expect(last_response.body).to include('Email inválido!')
       end
     end
   end

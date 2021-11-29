@@ -59,7 +59,7 @@ class UsersQueries < BaseQueries
 
     hash_data.delete('password_digest')
 
-    User.user_new(hash_data)
+    User.user_new(hash_data.transform_keys(&:to_sym))
   end
 
   def self.find(id)

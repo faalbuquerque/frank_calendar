@@ -32,13 +32,14 @@ class User < ModelBase
   end
 
   def user_update(user_params)
-    user_params.map do |key, value|
-      return false if value.strip.empty?
+    user_params = user_params.transform_keys(&:to_sym)
 
-      return !!(user_params['email'] =~ URI::MailTo::EMAIL_REGEXP) if key.include?('email')
-    end
+    user_params[:password_digest] = BCrypt::Password.create(user_params[:password]) if user_params[:password]
+    user_params.each_key { |key| attributes[key] = user_params[key] }
 
-    UsersQueries.update(attributes['id'], user_params)
+    errors << 'Não foi possível atualizar!' and return false unless custom_valid?(:not_blank, :valid_email)
+
+    UsersQueries.update(id, user_params)
   end
 
   def self.find(id)

@@ -34,15 +34,15 @@ end
 patch '/users/:id' do
   user = User.find(params['id'])
 
-  if user == []
-    JSON message: 'Nenhum usuário encontrado!'
-  elsif user.user_update(user_params)
+  JSON message: 'Nenhum usuário encontrado!' if user == []
+
+  if user.user_update(user_params)
     user_params['message'] = 'Usuário atualizado!'
 
     filtered_pass(user_params)
     clean_hash(user_params).to_json
   else
-    status 422 and JSON message: 'Não foi possivel atualizar!'
+    status 422 and user.errors.to_json
   end
 end
 

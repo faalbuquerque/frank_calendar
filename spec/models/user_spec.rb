@@ -99,9 +99,9 @@ RSpec.describe 'User' do
 
         user = User.find_by(email: 'user_first@email.com')
 
-        user_id = User.find(user.first.id)
+        user_find = User.find(user.first.id)
 
-        expect(user_id.attributes['id']).to eq(user.first.id)
+        expect(user_find.id).to eq(user.first.id)
       end
     end
   end
