@@ -1,5 +1,4 @@
 require './controllers/application_controller'
-require './models/user'
 
 get '/users' do
   users = User.all

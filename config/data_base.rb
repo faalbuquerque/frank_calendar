@@ -19,7 +19,7 @@ class DataBase
   end
 
   def self.clean_db
-    sql = 'TRUNCATE TABLE users' if ENV['DATABASE'] == 'test'
+    sql = 'DELETE FROM events; DELETE FROM users;' if ENV['DATABASE'] == 'test'
 
     connection.exec(sql)
     connection&.close

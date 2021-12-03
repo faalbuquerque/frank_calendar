@@ -1,6 +1,5 @@
-require './controllers/users_controller'
-require './controllers/home_controller'
-require './controllers/sessions_controller'
+Dir.glob('./controllers/*.rb').each { |file| require file }
+
+Dir.glob('./spec/support/*.rb').each { |file| require file }
+
 require './config/data_base'
-require './spec/support/user_helper'
-require './spec/support/json_helper'

@@ -5,10 +5,11 @@ require 'bcrypt'
 class User < ModelBase
   attr_accessor :id, :name, :email, :created_at, :updated_at
 
-  validate :not_blank, :valid_email, :not_missing, :unique_email
-
   def initialize(hash)
     super
+
+    validations :not_blank, :valid_email, :not_missing, :unique_email
+
     @id = hash[:id]
     @name = hash[:name]
     @email = hash[:email]

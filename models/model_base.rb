@@ -3,6 +3,8 @@ require_relative '../helpers/modules/validate'
 class ModelBase
   attr_accessor :attributes, :errors
 
+  attr_reader :validate
+
   include Validate
 
   def initialize(hash)
@@ -11,12 +13,7 @@ class ModelBase
   end
 
   # setter
-  def self.validate(*validations)
-    @@validate = validations
-  end
-
-  # getter
-  def validate
-    @@validate
+  def validations(*validations)
+    @validate = validations
   end
 end

@@ -1,5 +1,3 @@
-require 'sinatra'
-
 module Authentication
   def current_user
     @user ||= User.user_new(session[:user]) if session[:user]

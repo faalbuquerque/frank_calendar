@@ -1,5 +1,3 @@
-require './controllers/users_controller'
-require './controllers/home_controller'
-require './controllers/sessions_controller'
+Dir.glob('./controllers/*.rb').each { |file| require file }
 
 run Sinatra::Application

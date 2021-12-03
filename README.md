@@ -1,6 +1,6 @@
 <h1 style="color:#2C3E50"> Frank Calendar</h1>
 
-<h3 align="justify">Software de calendário para gerenciar eventos, desenvolvido em Sinatra.</h3>
+<h2 align="justify">Software de calendário para gerenciar eventos, desenvolvido em Sinatra.</h2>
 
 <h2> Principais tecnologias utilizadas: </h2>
 <p>
@@ -112,7 +112,7 @@ psql -U postgres
 <p >⌛ Em desenvolvimento...</p>
 <br>
 
-<h3 style="color:#2C3E50"> Endpoint para visualizar todos os usuários:</h3>
+<h2 style="color:#2C3E50"> Endpoint para visualizar todos os usuários:</h2>
 
 ```json
 Rota: GET http://127.0.0.1:4567/users
@@ -151,7 +151,7 @@ Output caso nao existam usuários criados:
 ```
 
 
-<h3 style="color:#2C3E50"> Endpoint para visualizar um usuário:</h3>
+<h2 style="color:#2C3E50"> Endpoint para visualizar um usuário:</h2>
 
 ```json
 Rota: GET http://127.0.0.1:4567/users/:id
@@ -179,7 +179,7 @@ Output caso nao exista um usuario com o id informado:
 ```
 
 
-<h3 style="color:#2C3E50"> Endpoint para adicionar usuário: </h3>
+<h2 style="color:#2C3E50"> Endpoint para adicionar usuário: </h2>
 
 ```json
 Rota:  POST http://127.0.0.1:4567/users
@@ -224,7 +224,7 @@ Output em caso de falha(email inválido):
 ]
 ```
 
-<h3 style="color:#2C3E50"> Endpoint para alterar usuário: </h3>
+<h2 style="color:#2C3E50"> Endpoint para alterar usuário: </h2>
 
 ```json
 Rota:  PATCH http://127.0.0.1:4567/users/:id
@@ -254,8 +254,9 @@ Output em caso de falha(dados inválidos):
 
 ```
 
+
 <br>
-<h2 > Autenticação de usuario pela API: </h2>
+<h1 > Autenticação de usuario pela API: </h1>
 <br>
 
 ```json
@@ -285,6 +286,126 @@ Output em caso de falha(campos em branco, faltando campos ou senha incorreta):
 
 {
   "message": "Erro de autenticação!"
+}
+
+```
+
+---
+<br>
+
+<h2 style="color:#2C3E50"> Endpoint para usuário adicionar eventos: </h2>
+
+```json
+Rota:  POST http://127.0.0.1:4567/users/:id/events
+
+Input:
+
+{ 
+	"event_name": "Um event",
+	"event_location": "On line, link aqui", 
+	"event_description": "Um evento legal",
+  "start_date": "2021-12-01",
+	"end_date": "2021-12-02",
+	"user_id": "3",
+}
+
+Output em caso de sucesso:
+
+{
+  "event_name": "a event",
+  "event_location": "On line, link aqui",
+  "event_description": "Um evento legal",
+  "start_date": "2021-12-01",
+  "end_date": "2021-12-02",
+  "user_id": "3",
+  "message": "Evento criado com sucesso!"
+}
+
+Output em caso de falha(campos em branco):
+
+[
+  "event_name: não pode ficar em branco!",
+  "event_location: não pode ficar em branco!",
+  "event_description: não pode ficar em branco!",
+  "start_date: não pode ficar em branco!",
+  "end_date: não pode ficar em branco!",
+  "Não foi possivel criar evento!"
+]
+
+Output em caso de falha(faltando campos):
+
+[
+  "event_name: campo faltando!",
+  "event_location: campo faltando!",
+  "event_description: campo faltando!",
+  "start_date: campo faltando!",
+  "end_date: campo faltando!",
+  "Não foi possivel criar evento!"
+]
+
+Output em caso de falha(tentar criar evento sem estar logado):
+
+{
+  "message": "Faça login para criar eventos!"
+}
+
+Output em caso de falha(tentar criar evento como outro usuario(outro id)):
+
+{
+  "message": "Algo deu errado!"
+}
+
+```
+
+<h2 style="color:#2C3E50"> Endpoint para visualizar eventos de um usuário: </h2>
+
+```json
+Rota:  GET http://127.0.0.1:4567/users/:id/events
+
+
+Output em caso de sucesso:
+
+[
+  {
+    "id": "1",
+    "event_name": "a event",
+    "event_location": "On line, link aqui",
+    "event_description": "Um evento legal",
+    "start_date": "2021-12-01 00:00:00-03",
+    "end_date": "2021-12-02 00:00:00-03",
+    "user_id": "3"
+  },
+  {
+    "id": "2",
+    "event_name": "b event",
+    "event_location": "On line, link aqui",
+    "event_description": "Um evento legal",
+    "start_date": "2021-12-01 00:00:00-03",
+    "end_date": "2021-12-02 00:00:00-03",
+    "user_id": "3"
+  },
+  {
+    "id": "3",
+    "event_name": "c event",
+    "event_location": "On line, link aqui",
+    "event_description": "Um evento legal",
+    "start_date": "2021-12-01 00:00:00-03",
+    "end_date": "2021-12-02 00:00:00-03",
+    "user_id": "3"
+  }
+]
+
+Output em caso de falha(tentar visualizar eventos sem estar logado):
+
+{
+  "message": "Faça login para ver seus eventos!"
+}
+
+
+Output caso ainda não existam eventos:
+
+{
+  "message": "Nenhum evento cadastrado!"
 }
 
 ```

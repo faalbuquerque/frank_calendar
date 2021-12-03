@@ -1,5 +1,5 @@
 module Validate
-  NOT_USED = %i[@id @attributes @errors @created_at @updated_at @known_attributes].freeze
+  NOT_USED = %i[@id @attributes @errors @created_at @updated_at @known_attributes @validate].freeze
 
   def valid?
     return true if catch_validations

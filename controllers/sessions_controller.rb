@@ -1,5 +1,4 @@
 require './controllers/application_controller'
-require './models/user'
 
 post '/users/login' do
   user = User.find_by(email: login_params[:email]).first
