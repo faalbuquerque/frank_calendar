@@ -28,7 +28,7 @@
 
 Para executar o projeto, abra o terminal(ctl+alt+t) e clone o projeto:
 ```
-git clone git@git.campuscode.com.br:onboarding2021setembro/frank_calendar.git
+git clone git@github.com:faalbuquerque/frank_calendar.git
 
 ```
 
